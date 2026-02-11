@@ -11,7 +11,6 @@ describe('BaseEntity', () => {
   describe('constructor', () => {
     it('should generate an ID if not provided', () => {
       const entity = new TestEntity();
-      console.log(entity);
 
       expect(entity.id).toBeDefined();
       expect(typeof entity.id).toBe('string');
@@ -21,7 +20,6 @@ describe('BaseEntity', () => {
     it('should use provided ID', () => {
       const customId = 'custom-id-123';
       const entity = new TestEntity(customId);
-      console.log(entity);
 
       expect(entity.id).toBe(customId);
     });
