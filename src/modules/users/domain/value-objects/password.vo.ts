@@ -2,6 +2,12 @@ import { ValueObject } from '@/shared/domain/value-object';
 import * as bcrypt from 'bcrypt';
 
 export class Password extends ValueObject<{ value: string }> {
+  private static readonly MIN_PASSWORD_LENGTH = 6;
+  private static readonly BCRYPT_SALT_ROUNDS = 10;
+  private static readonly UPPERCASE_REGEX = /[A-Z]/;
+  private static readonly LOWERCASE_REGEX = /[a-z]/;
+  private static readonly NUMBER_REGEX = /[0-9]/;
+
   private constructor(value: string) {
     super({ value });
   }
@@ -9,7 +15,7 @@ export class Password extends ValueObject<{ value: string }> {
   static async create(value: string): Promise<Password> {
     const trimmed = value.trim();
 
-    if (trimmed.length < 6) {
+    if (trimmed.length < Password.MIN_PASSWORD_LENGTH) {
       throw new Error('Senha inválida');
     }
 
@@ -30,7 +36,7 @@ export class Password extends ValueObject<{ value: string }> {
 
   private static async hash(password: string): Promise<string> {
     try {
-      return await bcrypt.hash(password, 10);
+      return await bcrypt.hash(password, Password.BCRYPT_SALT_ROUNDS);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       throw new Error('Hashing password failed: ' + message);
@@ -38,9 +44,9 @@ export class Password extends ValueObject<{ value: string }> {
   }
 
   private static isStrong(password: string): boolean {
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
+    const hasUpperCase = Password.UPPERCASE_REGEX.test(password);
+    const hasLowerCase = Password.LOWERCASE_REGEX.test(password);
+    const hasNumber = Password.NUMBER_REGEX.test(password);
     return hasUpperCase && hasLowerCase && hasNumber;
   }
 
