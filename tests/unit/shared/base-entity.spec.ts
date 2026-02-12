@@ -64,13 +64,13 @@ describe('BaseEntity', () => {
     it('should return false for null entity', () => {
       const entity = new TestEntity();
 
-      expect(entity.equals(null as any)).toBe(false);
+      expect(entity.equals(null)).toBe(false);
     });
 
     it('should return false for undefined entity', () => {
       const entity = new TestEntity();
 
-      expect(entity.equals(undefined as any)).toBe(false);
+      expect(entity.equals(undefined)).toBe(false);
     });
   });
 });
