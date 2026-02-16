@@ -76,4 +76,74 @@ describe('User Entity', () => {
       expect(user1.equals(user2)).toBe(false);
     });
   });
+
+  describe('changeEmail', () => {
+    it('should update email and update updatedAt timestamp', async () => {
+      const email = new Email('gui@gmail.com');
+      const phone = new Phone('+5511999999999');
+      const password = await Password.create('Strong123');
+
+      const user = new User(undefined, 'Guilherme', email, phone, password);
+      const initialUpdatedAt = user.updatedAt.getTime();
+
+      // Delay para garantir que o timestamp seja diferente
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      const newEmail = new Email('novo@gmail.com');
+      user.changeEmail(newEmail);
+
+      expect(user.email.equals(newEmail)).toBe(true);
+      // Verifica que updatedAt foi atualizado (pode ser igual ou maior)
+      expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(initialUpdatedAt);
+    });
+
+    it('should not update if new email is the same', async () => {
+      const email = new Email('gui@gmail.com');
+      const phone = new Phone('+5511999999999');
+      const password = await Password.create('Strong123');
+
+      const user = new User(undefined, 'Guilherme', email, phone, password);
+      const initialUpdatedAt = user.updatedAt;
+
+      const sameEmail = new Email('gui@gmail.com');
+      user.changeEmail(sameEmail);
+
+      expect(user.updatedAt.getTime()).toBe(initialUpdatedAt.getTime());
+    });
+  });
+
+  describe('changePhone', () => {
+    it('should update phone and update updatedAt timestamp', async () => {
+      const email = new Email('gui@gmail.com');
+      const phone = new Phone('+5511999999999');
+      const password = await Password.create('Strong123');
+
+      const user = new User(undefined, 'Guilherme', email, phone, password);
+      const initialUpdatedAt = user.updatedAt.getTime();
+
+      // Delay para garantir que o timestamp seja diferente
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      const newPhone = new Phone('+5511888888888');
+      user.changePhone(newPhone);
+
+      expect(user.phone.equals(newPhone)).toBe(true);
+      // Verifica que updatedAt foi atualizado (pode ser igual ou maior)
+      expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(initialUpdatedAt);
+    });
+
+    it('should not update if new phone is the same', async () => {
+      const email = new Email('gui@gmail.com');
+      const phone = new Phone('+5511999999999');
+      const password = await Password.create('Strong123');
+
+      const user = new User(undefined, 'Guilherme', email, phone, password);
+      const initialUpdatedAt = user.updatedAt;
+
+      const samePhone = new Phone('+5511999999999');
+      user.changePhone(samePhone);
+
+      expect(user.updatedAt.getTime()).toBe(initialUpdatedAt.getTime());
+    });
+  });
 });
